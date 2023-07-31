@@ -8,8 +8,7 @@ export const createUser = async (user) => {
         // checking the user exist or not
         // when 
         const docSnap = await getDoc(doc(userRef, user?.uid));
-        console.log(docSnap.exists());
-
+        
         if(docSnap.exists()) {
             return {status: 200, msg: 'User already exists.'}
         }

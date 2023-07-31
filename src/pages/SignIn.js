@@ -33,7 +33,14 @@ export default function SignIn() {
     }
 
     const googleAuthlodin = async () => {
-        await googleAuth()
+        const response = await googleAuth();
+
+        if(response.status === 400) {
+            return setError(response.msg)
+        }
+
+        const user = await createUser(response.user);
+        console.log(user);
     }
 
     return (
