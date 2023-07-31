@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
-import { signIn } from "../api/auth";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { googleAuth, signIn } from "../api/auth";
+import { Link, useNavigate } from "react-router-dom";
+import { createUser } from "../api/users";
 
 export default function SignIn() {
     const [error, setError] = useState('');
@@ -23,27 +24,35 @@ export default function SignIn() {
             return setError(response.msg)
         }
 
-        localStorage.setItem('user', JSON.stringify(response.user));
+        const user = await createUser(response.user);
+        
 
-        navigate('/protected')
+        // localStorage.setItem('user', JSON.stringify(response.user));
+
+        // navigate('/protected')
     }
 
-  return (
-    <>
-    <h2>SignIn Form</h2>
-    {error && <h3>{error}</h3>}
-    <form onSubmit={submitHandler}>
-        <div>
-            <label htmlFor="email">Email</label>
-            <Input ref={emailRef} type="email" name="email" />
-        </div>
-        <div>
-            <label htmlFor="password">Password</label>
-            <Input ref={passwordRef} type="password" name="password" />
-        </div>
-        <Button>Login</Button>
-    </form>
-    <p>Don't have an account. <Link to="/sign-up">Click Here.</Link></p>
-    </>
-  )
+    const googleAuthlodin = async () => {
+        await googleAuth()
+    }
+
+    return (
+        <>
+        <h2>SignIn Form</h2>
+        {error && <h3>{error}</h3>}
+        <form onSubmit={submitHandler}>
+            <div>
+                <label htmlFor="email">Email</label>
+                <Input ref={emailRef} type="email" name="email" />
+            </div>
+            <div>
+                <label htmlFor="password">Password</label>
+                <Input ref={passwordRef} type="password" name="password" />
+            </div>
+            <Button>Login</Button>
+        </form>
+        <Button onClick={googleAuthlodin}>Google</Button>
+        <p>Don't have an account. <Link to="/sign-up">Click Here.</Link></p>
+        </>
+    )
 }
